@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Scanner - Advanced Threat Detection System</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Matrix Background -->
+    <canvas id="matrix-canvas"></canvas>
+    
+    <!-- Main Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <div class="logo-icon">🛡️</div>
+                <div class="logo-text">
+                    <span class="logo-title">MATRIX SCANNER</span>
+                    <span class="logo-subtitle">Advanced Threat Detection System</span>
+                </div>
+            </div>
+            <div class="header-info">
+                <span class="version">v2.4.1</span>
+                <span class="status" id="app-status">READY</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <!-- Left Panel - Stats and Controls -->
+            <aside class="left-panel">
+                <!-- Stats -->
+                <div class="stats-section">
+                    <h3>SCAN STATISTICS</h3>
+                    <div class="stat-card">
+                        <div class="stat-icon">📄</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="stat-scanned">0</div>
+                            <div class="stat-label">Files Scanned</div>
+                        </div>
+                    </div>
+                    <div class="stat-card threat">
+                        <div class="stat-icon">🦠</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="stat-threats">0</div>
+                            <div class="stat-label">Threats Found</div>
+                        </div>
+                    </div>
+                    <div class="stat-card clean">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="stat-clean">0</div>
+                            <div class="stat-label">Clean Files</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="stat-time">0:00</div>
+                            <div class="stat-label">Scan Time</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="controls-section">
+                    <h3>SCAN CONTROLS</h3>
+                    <button class="btn btn-success" id="btn-start-scan">
+                        ▶️ START SCAN
+                    </button>
+                    <button class="btn btn-danger" id="btn-stop-scan" disabled>
+                        ⏹️ STOP SCAN
+                    </button>
+                    <button class="btn btn-warning" id="btn-clear-threats" disabled>
+                        🗑️ CLEAR THREATS
+                    </button>
+                    <button class="btn btn-secondary" id="btn-export">
+                        💾 Export Report
+                    </button>
+                    <button class="btn btn-primary" id="btn-check-updates">
+                        🔄 Check Updates
+                    </button>
+                    <button class="btn btn-secondary" id="btn-clear-list">
+                        🧹 Clear Results
+                    </button>
+                </div>
+
+                <!-- Scan Info -->
+                <div class="scan-mode-section">
+                    <h3>SCAN INFO</h3>
+                    <div class="info-box">
+                        <p>🔍 Full System Scan</p>
+                        <p class="hint">Searches entire computer for cheat programs</p>
+                    </div>
+                    <label class="radio-label">
+                        <input type="radio" name="scan-mode" value="quick" checked>
+                        <span>Quick Scan</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="scan-mode" value="deep">
+                        <span>Deep Scan</span>
+                    </label>
+                </div>
+            </aside>
+
+            <!-- Center Panel - File List -->
+            <div class="center-panel">
+                <div class="panel-header">
+                    <h3>🎯 DETECTED THREATS</h3>
+                    <div class="panel-actions">
+                        <button class="btn-icon" id="btn-refresh-list" title="Refresh">🔄</button>
+                    </div>
+                </div>
+                
+                <div class="file-list-container">
+                    <div class="empty-state" id="empty-state">
+                        <div class="empty-icon">🔍</div>
+                        <p>No threats detected</p>
+                        <p class="hint">Click "START SCAN" to begin searching for cheats</p>
+                    </div>
+                    <div class="file-list" id="file-list"></div>
+                </div>
+
+                <div class="progress-bar-container" id="progress-container" style="display: none;">
+                    <div class="progress-info">
+                        <span id="progress-text">Scanning...</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Details -->
+            <aside class="right-panel">
+                <div class="panel-header">
+                    <h3>ℹ️ THREAT DETAILS</h3>
+                </div>
+                
+                <div class="details-container" id="details-container">
+                    <div class="empty-details">
+                        <div class="empty-icon">👆</div>
+                        <p>Select a threat to view details</p>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Console Log -->
+        <footer class="app-footer">
+            <div class="console-header">
+                <h4>💻 CONSOLE LOG</h4>
+                <button class="btn-icon" id="btn-clear-console" title="Clear Console">🧹</button>
+            </div>
+            <div class="console-log" id="console-log">
+                <div class="console-entry">
+                    <span class="console-time">[00:00:00]</span>
+                    <span class="console-message">Matrix Scanner initialized. Ready for full system scan.</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
